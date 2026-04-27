@@ -41,3 +41,26 @@
   flex-direction: column;
   box-sizing: border-box;
 }
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.done{
+  text-decoration: line-through;
+}
+.tasks-list{
+  width: 500px;
+  margin: 20px auto;
+  border: 1px solid black;
+  border-radius: 30px;
+}
+.tasks-list__item{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+.tasks-list__item *{
+  /* align-self: stretch; */
+}

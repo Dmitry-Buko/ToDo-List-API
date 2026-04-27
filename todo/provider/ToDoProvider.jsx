@@ -1,10 +1,8 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { ToDoContext } from "./ToDoContext";
-import { useCallback } from "react";
 
 export const ToDoProvider = ({ children }) => {
   const [tasks, setTasks] = useState([
-    //___________список тасок
     {
       id: 1,
       title: "Положить плитку",
@@ -17,41 +15,53 @@ export const ToDoProvider = ({ children }) => {
     },
   ]);
 
-  console.log(tasks);//--------------------LOG
+  console.log(tasks);
   
 
-  const [text, setText] = useState(""); //------------------введенный текст в инпуте
+  const addTask = useCallback((title) => {
+    if (!title.trim()) return;
 
-  const handleChange = useCallback((e) => {
-    setText(e.target.value);
-  }, []); //------------------введенный текст в инпуте
-
-  const handleClick = useCallback(() => {
-    setTasks((tasks) => [
-      ...tasks,
-      { id: crypto.randomUUID(), title: text, isDone: false },
+    setTasks((prev) => [
+      ...prev,
+      {
+        id: crypto.randomUUID(),
+        title: title.trim(),
+        isDone: false,
+      },
     ]);
-  }, [text]); //------------------добавление задачи
+  }, []);
 
   const deleteTask = useCallback((id) => {
-    setTasks((item) => item.filter((task) => task.id !== id));
-  }, []); //------------------удаление задачи
+    setTasks((prev) => prev.filter((task) => task.id !== id));
+  }, []);
 
   const isDoneToggler = useCallback((id) => {
-    setTasks((tasks) =>
-      tasks.map((item) => (item.id === id ? { ...item, isDone: !item.isDone } : item)),
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, isDone: !task.isDone } : task
+      )
     );
-  }, []);//------------------TOGGLER
+  }, []);
 
-  // ___VALUE___
-  const value = {
+  const editTitle = useCallback((id, newTitle) => {
+    setTasks((prev) =>
+      prev.map((task) =>
+        task.id === id ? { ...task, title: newTitle } : task
+      )
+    );
+  }, []);
+
+  const value = useMemo(() => ({
     tasks,
-    text,
-    handleChange,
-    handleClick,
+    addTask,
     deleteTask,
     isDoneToggler,
-  };
+    editTitle,
+  }), [tasks, addTask, deleteTask, isDoneToggler, editTitle]);
 
-  return <ToDoContext.Provider value={value}>{children}</ToDoContext.Provider>;
+  return (
+    <ToDoContext.Provider value={value}>
+      {children}
+    </ToDoContext.Provider>
+  );
 };

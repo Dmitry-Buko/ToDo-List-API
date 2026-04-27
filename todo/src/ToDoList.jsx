@@ -5,7 +5,8 @@ const ToDoList = () => {
   const { tasks } = useTodo();
 
   return (
-    <div>
+    <div className="tasks-list">
+      {tasks.length === 0 && <h1>Пусто</h1>}
       {tasks.map((item) => (
         <Task key={item.id} task={item} />
       ))}
