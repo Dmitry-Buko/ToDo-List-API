@@ -6,11 +6,11 @@ import ToDoList from "./ToDoList";
 function App() {
 
   return (
-    <>
+    <div className="app">
       <Header />
       <InputTask/>
       <ToDoList />
-    </>
+    </div>
   );
 }
 

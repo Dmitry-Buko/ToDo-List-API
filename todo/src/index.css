@@ -52,15 +52,61 @@
 .tasks-list{
   width: 500px;
   margin: 20px auto;
-  border: 1px solid black;
-  border-radius: 30px;
+  /* border: 1px solid black;
+  border-radius: 30px; */
 }
-.tasks-list__item{
+
+.tasks-list__item {
+  position: relative;
+  
   display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 10px;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  margin-bottom: 8px;
+  width: 100%;
+  box-sizing: border-box;
 }
-.tasks-list__item *{
-  /* align-self: stretch; */
+
+.task-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+}
+
+.task-content p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.task-buttons {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.edit-btn, .delete-btn {
+  padding: 8px 16px;
+  white-space: nowrap;
+  border-radius: 6px;
+}
+.error-box{
+  position: absolute;
+  top: 0px;
+  left: -230px;
+  width: 210px;
+}
+.edit-wrapper {
+  width: 100%;
+}
+
+.edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 2px solid #ccc;
+  border-radius: 6px;
 }

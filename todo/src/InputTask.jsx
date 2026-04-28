@@ -12,15 +12,18 @@ const InputTask = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Новая задача..."
-      />
-      <button type="submit">Добавить</button>
-    </form>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Новая задача..."
+        />
+        <button type="submit">Добавить</button>
+      </form>
+      
+    </div>
   );
 };
 
