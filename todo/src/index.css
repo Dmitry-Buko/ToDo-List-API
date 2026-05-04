@@ -11,8 +11,8 @@
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --heading: system-ui, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
@@ -39,31 +39,61 @@
   min-height: 100svh;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   box-sizing: border-box;
 }
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-.done{
+.todo {
+  width: 600px;
+  margin: 0 auto;
+}
+.todo__title {
+  margin: 20px auto;
+}
+form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+.todo__input-task {
+  width: 200px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+}
+.add-task-form__submit,
+.task__btn--edit,
+.task__btn--delete,
+.filters__btn,
+.todo__clear-completed {
+  background-color: linear-gradient;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  cursor: pointer;
+}
+.done {
   text-decoration: line-through;
 }
-.tasks-list{
-  width: 500px;
+.tasks-list {
+  width: 100%;
   margin: 20px auto;
-  /* border: 1px solid black;
-  border-radius: 30px; */
 }
-
-.tasks-list__item {
-  position: relative;
-  
+.filters__btn--active {
+  background-color: #aeaeae;
+}
+.task {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   gap: 12px;
   padding: 12px;
-  background: white;
+  background: inherit;
   border: 1px solid #ddd;
   border-radius: 12px;
   margin-bottom: 8px;
@@ -71,42 +101,49 @@
   box-sizing: border-box;
 }
 
-.task-content {
+.task__content {
   flex: 1;
   min-width: 0;
   display: flex;
   align-items: center;
 }
 
-.task-content p {
+.task__text {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 20px;
 }
 
-.task-buttons {
+.task__actions {
   display: flex;
   gap: 8px;
   flex-shrink: 0;
 }
-
-.edit-btn, .delete-btn {
-  padding: 8px 16px;
-  white-space: nowrap;
-  border-radius: 6px;
+.error {
+  border-color: red;
 }
-.error-box{
+.edit-wrapper__input {
+  padding: 5px;
+  width: 100%;
+  height: 100%;
+}
+.error-box {
   position: absolute;
-  top: 0px;
-  left: -230px;
+  top: 270px;
+  left: 0px;
   width: 210px;
 }
 .edit-wrapper {
   width: 100%;
 }
 
-.edit-input {
-  width: 100%;
-  padding: 8px 12px;
-  border: 2px solid #ccc;
-  border-radius: 6px;
+.filters {
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 20px;
+}
+
+.footer{
+  display: flex;
+  justify-content: center;
+  gap: 50px;
 }

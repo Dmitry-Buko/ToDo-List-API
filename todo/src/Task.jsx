@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useTodo } from "../provider/ToDoContext";
 
 const Task = ({ task }) => {
@@ -8,22 +8,22 @@ const Task = ({ task }) => {
   const [editText, setEditText] = useState(task.title);
   const [error, setError] = useState("");
 
-  const validateAndSave = (text) => {
-    const trimmed = text.trim();
-    if (!trimmed) {
-      setError("Заголовок задачи не может быть пустым");
-      return false;
-    }
-    editTitle(task.id, trimmed);
-    setError("");
-    return true;
-  };
-  
-  const editTask = (e) => {
-    if (e.key === "Enter") {
-      if (validateAndSave(editText)) {
+  const validateAndSave = useCallback(
+    (text) => {
+      const success = editTitle(task.id, text, setError);
+      if (success) {
+        setError("");
         setIsEdit(false);
+        return true;
       }
+      return false;
+    },
+    [editTitle, task.id],
+  );
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      validateAndSave(editText);
     } else if (e.key === "Escape") {
       setIsEdit(false);
       setEditText(task.title);
@@ -31,24 +31,25 @@ const Task = ({ task }) => {
     }
   };
 
-  const editOrSaveData = () => {
-    if (!isEdit) {
-      setIsEdit(true);
+  const toggleEdit = () => {
+    if (isEdit) {
+      validateAndSave(editText);
     } else {
-      if (validateAndSave(editText)) {
-        setIsEdit(false);
-      }
+      setIsEdit(true);
+      setError("");
     }
   };
 
   return (
-    <div className="tasks-list__item">
+    <div className="task">
       <input
         type="checkbox"
+        className="task__checkbox"
         checked={task.isDone}
         onChange={() => isDoneToggler(task.id)}
       />
-      <div className="task-content">
+
+      <div className="task__content">
         {isEdit ? (
           <div className="edit-wrapper">
             <input
@@ -57,8 +58,9 @@ const Task = ({ task }) => {
                 setEditText(e.target.value);
                 if (error) setError("");
               }}
-              onKeyDown={editTask}
-              className={`edit-input ${error ? "error" : ""}`}
+              onKeyDown={handleKeyDown}
+              className={`edit-wrapper__input ${error ? "error" : ""}`}
+              autoFocus
             />
             {error && (
               <div className="error-box">
@@ -68,14 +70,15 @@ const Task = ({ task }) => {
             )}
           </div>
         ) : (
-          <p className={task.isDone ? "done" : ""}>{task.title}</p>
+          <p className={`task__text ${task.isDone ? "done" : ""}`}>{task.title}</p>
         )}
       </div>
-      <div className="task-buttons">
-        <button onClick={editOrSaveData} className="edit-btn">
+
+      <div className="task__actions">
+        <button onClick={toggleEdit} className="task__btn--edit">
           {isEdit ? "Сохранить ✅" : "Изменить ✍️"}
         </button>
-        <button onClick={() => deleteTask(task.id)} className="delete-btn">
+        <button onClick={() => deleteTask(task.id)} className="task__btn--delete">
           Удалить 🗑
         </button>
       </div>
