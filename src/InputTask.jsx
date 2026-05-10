@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useTodo } from "../provider/ToDoContext";
+import { useTodo } from "./provider/ToDoContext";
 
 const InputTask = () => {
   const { addTask } = useTodo();

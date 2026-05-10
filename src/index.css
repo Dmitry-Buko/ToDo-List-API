@@ -147,3 +147,10 @@ form {
   justify-content: center;
   gap: 50px;
 }
+
+
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+}
