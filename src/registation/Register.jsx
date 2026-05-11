@@ -25,7 +25,7 @@ const Register = () => {
     setError("");
     setLoading(true);
     setSuccess("");
-
+    
     try {
       const response = await axios.post(
         "https://todo-redev.herokuapp.com/api/users/register",
@@ -40,7 +40,7 @@ const Register = () => {
       setTimeout(() => {
         navigate("/login", {
           state: {
-            username: formData.username,
+            email: formData.email,
             password: formData.password,
           },
         });
