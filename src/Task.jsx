@@ -5,7 +5,7 @@ const Task = ({ task }) => {
   const { deleteTask, isDoneToggler, editTitle } = useTodo();
 
   const [isEdit, setIsEdit] = useState(false);
-  const [editText, setEditText] = useState(task.title);
+  const [editText, setEditText] = useState(task.title || '');
   const [error, setError] = useState("");
 
   const validateAndSave = useCallback(
@@ -45,7 +45,7 @@ const Task = ({ task }) => {
       <input
         type="checkbox"
         className="task__checkbox"
-        checked={task.isDone}
+        checked={!!task.isCompleted}
         onChange={() => isDoneToggler(task.id)}
       />
 
@@ -70,7 +70,7 @@ const Task = ({ task }) => {
             )}
           </div>
         ) : (
-          <p className={`task__text ${task.isDone ? "done" : ""}`}>{task.title}</p>
+          <p className={`task__text ${task.isCompleted ? "done" : ""}`}>{task.title}</p>
         )}
       </div>
 

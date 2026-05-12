@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState, useCallback, useMemo, useEffect } from "react";
 import { ToDoContext } from "./ToDoContext";
 import api from "../api/todoApi";
@@ -10,6 +9,9 @@ export const ToDoProvider = ({ children }) => {
   const [success, setSuccess] = useState(""); //успех загрузки
   const [error, setError] = useState(""); //ошибка при загрузке
 
+  console.log("tasks: ", tasks);
+
+  //начальная Загрузка тасок
   useEffect(() => {
     const loadTasks = async () => {
       setLoading(true);
@@ -29,6 +31,7 @@ export const ToDoProvider = ({ children }) => {
     loadTasks();
   }, []);
 
+  //добавление тасок в localStorage -- удалить!!!
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -37,7 +40,7 @@ export const ToDoProvider = ({ children }) => {
   const activeCount = useMemo(() => {
     let count = 0;
     tasks.forEach((el) => {
-      if (!el.isDone) count++;
+      if (!el.isCompleted) count++;
     });
     return count;
   }, [tasks]);
@@ -46,13 +49,14 @@ export const ToDoProvider = ({ children }) => {
   const filteredTasks = useMemo(() => {
     switch (filter) {
       case "active":
-        return tasks.filter((item) => !item.isDone);
+        return tasks.filter((item) => !item.isCompleted);
       case "completed":
-        return tasks.filter((item) => item.isDone);
+        return tasks.filter((item) => item.isCompleted);
       default:
         return tasks;
     }
   }, [filter, tasks]);
+
   //валидация
   const validateText = useCallback((text) => {
     const trimmed = text.trim();
@@ -62,7 +66,7 @@ export const ToDoProvider = ({ children }) => {
     return { isValid: true, trimmedText: trimmed.toString() };
   }, []);
 
-  //добавление задачи
+  //добавление задачи +++++++++++++
   const addTask = useCallback(
     async (title, onError) => {
       const result = validateText(title);
@@ -70,67 +74,102 @@ export const ToDoProvider = ({ children }) => {
         onError?.(result.error);
         return false;
       }
-
       try {
         const response = await api.post("/todos", {
           title: result.trimmedText,
         });
-        console.log('response.data: ', response.data);
-        setTasks(response.data)
+        setTasks((prev) => [...prev, response.data]);
       } catch (error) {
+        setError(error);
         console.log(error);
       }
-
-      // setTasks((prev) => [
-      //   ...prev,
-      //   { id: crypto.randomUUID(), title: result.trimmedText, isDone: false },
-      // ]);
-      // return true;
-
-      //пример!!!!!!!!!
-      //const resp = {
-      //   id:6717,
-      //   isCompleted:false,
-      //   title: "asd",
-      //   user_id: 2478
-      // }
     },
     [validateText],
   );
 
   //изменение задачи
   const editTitle = useCallback(
-    (id, newTitle, onError) => {
+    async (id, newTitle, onError) => {
       const result = validateText(newTitle);
       if (!result.isValid) {
         onError?.(result.error);
         return false;
       }
-      setTasks((prev) =>
-        prev.map((task) =>
-          task.id === id ? { ...task, title: result.trimmedText } : task,
-        ),
-      );
+      setLoading(true);
+      try {
+        const response = await api.patch(`/todos/${id}`, {
+          title: newTitle,
+        });
+        console.log('response: ', response);
+        
+        setTasks((prev) =>
+          prev.map((task) =>
+            task.id === id ? { ...task, title: response.data.title } : task,
+          ),
+        );
+      } catch (error) {
+        setError(error);
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
       return true;
     },
     [validateText],
   );
-  //удаление задачи
-  const deleteTask = useCallback((id) => {
-    setTasks((prev) => prev.filter((task) => task.id !== id));
+  //удаление задачи +++++++++
+  const deleteTask = useCallback(async (id) => {
+    setLoading(true);
+    try {
+      const response = await api.delete(`/todos/${id}`);
+      // console.log('delete response: ', response);
+      setTasks((prev) => prev.filter((task) => task.id !== response.data?.id));
+    } catch (error) {
+      console.log("Ошибка:", error.response?.data?.message || error.message);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
-  //переключатель
-  const isDoneToggler = useCallback((id) => {
-    setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, isDone: !task.isDone } : task,
-      ),
-    );
+
+  //переключатель выполнено или нет ++++++++++++
+  const isDoneToggler = useCallback(async (id) => {
+    setLoading(true);
+    try {
+      const response = await api.patch(`/todos/${id}/isCompleted`);
+      setTasks((prev) =>
+        prev.map((task) =>
+          task.id === response.data[0].id
+            ? { ...task, isCompleted: response.data[0].isCompleted }
+            : task,
+        ),
+      );
+    } catch (error) {
+      console.log("Ошибка:", error.response?.data || error.message);
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
   }, []);
-  //очистка выполненных
-  const clearCompeted = useCallback(() => {
-    setTasks((prev) => prev.filter((task) => !task.isDone));
-  }, []);
+
+  //очистка выполненных (в конце) +++++++++++++++++++
+  const clearCompeted = useCallback(async () => {
+    const completedTask = tasks.filter((item) => item.isCompleted);
+    if (completedTask.length === 0) return;
+    setLoading(true);
+    try {
+      const deletePromise = completedTask.map((taks) => {
+        api.delete(`/todos/${taks.id}`);
+      });
+      await Promise.all(deletePromise);
+      setTasks((prev) => prev.filter((task) => !task.isCompleted));
+    } catch (error) {
+      console.log("Ошибка:", error.response?.data?.message || error.message);
+      setError(error);
+    } finally {
+      setLoading(true);
+    }
+  }, [tasks]);
 
   const value = useMemo(
     () => ({
