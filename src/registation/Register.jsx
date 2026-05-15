@@ -4,22 +4,21 @@ import { Link, useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [formData, setFormData] = useState({
-    username: "", //"Olekkkag123"
-    email: "", //"olekkkag1233@gmail.com"
-    password: "", //Olekkkag1..|___2
+    username: "",
+    email: "",
+    password: "",
     gender: "",
     age: "",
   });
-  const [error, setError] = useState(""); //ошибка при загрузке
-  const [loading, setLoading] = useState(false); //флаг загрузки
-  const [success, setSuccess] = useState(""); //успех загрузки
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  //регистрация пользователя
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -46,7 +45,7 @@ const Register = () => {
         });
       }, 2000);
 
-      setSuccess("Регистрация прошла успешно!Вы будете перенаправлены на страницу входа!");
+      setSuccess("Аккаунт создан. Заходим!");
       setFormData({
         username: "",
         email: "",
@@ -67,14 +66,13 @@ const Register = () => {
   return (
     <div className="login">
       <div className="login__container">
-        <h1>Регистрация</h1>
+        <h1 className="login__title">Регистрация</h1>
 
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
 
         <form onSubmit={handleSubmit} className="login__form">
           <div className="form-group">
-            {" "}
             {/*Логин */}
             <label>Логин</label>
             <input
@@ -88,7 +86,6 @@ const Register = () => {
           </div>
 
           <div className="form-group">
-            {" "}
             {/*E-mail */}
             <label>E-mail</label>
             <input
@@ -102,7 +99,6 @@ const Register = () => {
           </div>
 
           <div className="form-group">
-            {" "}
             {/*Пароль */}
             <label>Пароль</label>
             <input
@@ -116,7 +112,6 @@ const Register = () => {
           </div>
 
           <div className="form-group">
-            {" "}
             {/*Gender */}
             <label>Пол</label>
             <input
@@ -130,7 +125,6 @@ const Register = () => {
           </div>
 
           <div className="form-group">
-            {" "}
             {/*Возраст */}
             <label>Возраст</label>
             <input
@@ -143,13 +137,13 @@ const Register = () => {
             />
           </div>
 
-          <button type="submit" disabled={loading}>
+          <button type="submit" disabled={loading} className="form-group__btn-enter">
             {loading ? "Регистрация..." : "Зарегистрироваться"}
           </button>
         </form>
 
         <p className="switch-link">
-          Уже есть аккаунт? <Link to="/login">Войти</Link>
+          Уже есть аккаунт? <Link to="/login" className="switch-link__login">Войти</Link>
         </p>
       </div>
     </div>

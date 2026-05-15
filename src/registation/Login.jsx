@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -8,21 +8,10 @@ const Login = () => {
     email: location.state?.email || "",
     password: location.state?.password || "",
   });
-  const [error, setError] = useState(""); //ошибка при загрузке
-  const [loading, setLoading] = useState(false); //флаг загрузки
-  const [success, setSuccess] = useState(""); //успех загрузки
+  const [error, setError] = useState(""); 
+  const [loading, setLoading] = useState(false); 
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (location.state?.email || location.state?.password) {
-  //     setFormData({
-  //       email: location.state.email || "",
-  //       password: location.state.password || "",
-  //     });
-  //     console.log("location: ", location);
-  //   }
-  // }, [location]); //добавление логина и пароля после регистрации
-  // console.log(formData);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -70,7 +59,7 @@ const Login = () => {
   return (
     <div className="login">
       <div className="login__container">
-        <h1>Вход в ToDo</h1>
+        <h1 className="login__title">Вход в ToDo</h1>
 
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
@@ -100,14 +89,14 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" disabled={loading}>
+          <button type="submit" disabled={loading} className="form-group__btn-enter">
             {loading ? "Вход..." : "Войти"}
           </button>
         </form>
 
         <p className="switch-link">
           Нет аккаунта?
-          <Link to="/register">Зарегистрироваться</Link>
+          <Link to="/register" className="switch-link__login">Зарегистрироваться</Link>
         </p>
       </div>
     </div>

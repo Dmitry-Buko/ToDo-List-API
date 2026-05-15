@@ -2,18 +2,26 @@ import { useCallback, useState } from "react";
 import { useTodo } from "./provider/ToDoContext";
 
 const Task = ({ task }) => {
-  const { deleteTask, isDoneToggler, editTitle } = useTodo();
+  const {
+    deleteTask,
+    isDoneToggler,
+    editTitle,
+    loading,
+    loadingDeleteTask,
+    loadingChangeTask,
+  } = useTodo();
 
   const [isEdit, setIsEdit] = useState(false);
-  const [editText, setEditText] = useState(task.title || '');
+  const [editText, setEditText] = useState(task.title || "");
   const [error, setError] = useState("");
 
   const validateAndSave = useCallback(
-    (text) => {
-      const success = editTitle(task.id, text, setError);
+    async (text) => {
+      const success = await editTitle(task.id, text, setError);
       if (success) {
         setError("");
         setIsEdit(false);
+        setEditText(text)
         return true;
       }
       return false;
@@ -21,9 +29,9 @@ const Task = ({ task }) => {
     [editTitle, task.id],
   );
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = async (e) => {
     if (e.key === "Enter") {
-      validateAndSave(editText);
+      await validateAndSave(editText);
     } else if (e.key === "Escape") {
       setIsEdit(false);
       setEditText(task.title);
@@ -31,9 +39,9 @@ const Task = ({ task }) => {
     }
   };
 
-  const toggleEdit = () => {
+  const toggleEdit = async () => {
     if (isEdit) {
-      validateAndSave(editText);
+      await validateAndSave(editText);
     } else {
       setIsEdit(true);
       setError("");
@@ -70,16 +78,30 @@ const Task = ({ task }) => {
             )}
           </div>
         ) : (
-          <p className={`task__text ${task.isCompleted ? "done" : ""}`}>{task.title}</p>
+          <p className={`task__text ${task.isCompleted ? "done" : ""}`}>
+            {task.title}
+          </p>
         )}
       </div>
 
       <div className="task__actions">
-        <button onClick={toggleEdit} className="task__btn--edit">
-          {isEdit ? "Сохранить ✅" : "Изменить ✍️"}
+        <button
+          onClick={toggleEdit}
+          disabled={loading}
+          className="task__btn--edit"
+        >
+          {isEdit
+            ? "Сохранить ✅"
+            : loadingChangeTask
+              ? "Изменение.."
+              : "Изменить ✍️"}
         </button>
-        <button onClick={() => deleteTask(task.id)} className="task__btn--delete">
-          Удалить 🗑
+        <button
+          onClick={() => deleteTask(task.id)}
+          className="task__btn--delete"
+          disabled={loading}
+        >
+          {loadingDeleteTask ? "Удаление.." : "Удалить 🗑"}
         </button>
       </div>
     </div>

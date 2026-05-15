@@ -1,5 +1,13 @@
-const Header =() =>{
-  return (<h1 className="todo__title">ToDo List API</h1>)
-}
+import { useTodo } from "./provider/ToDoContext";
 
-export default Header
+const Header = () => {
+  const { error } = useTodo();
+  return (
+    <>
+      <h1 className="todo__title">ToDo List API</h1>
+      {error ? <p className="error-message">{ error }</p> : ""}
+    </>
+  );
+};
+
+export default Header;

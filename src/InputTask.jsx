@@ -2,14 +2,14 @@ import { useCallback, useState } from "react";
 import { useTodo } from "./provider/ToDoContext";
 
 const InputTask = () => {
-  const { addTask } = useTodo();
+  const { addTask, loadingAddTask } = useTodo();
   const [text, setText] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
-      const success = addTask(text, setError);
+      const success = await addTask(text, setError);
       if (success) {
         setText("");
         setError("");
@@ -33,7 +33,7 @@ const InputTask = () => {
           placeholder="Новая задача..."
         />
         <button className="add-task-form__submit" type="submit">
-          Добавить ➕
+          {loadingAddTask ? 'Добавление...' : 'Добавить ➕'}
         </button>
       </form>
       {error && (
