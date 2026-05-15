@@ -5,7 +5,7 @@ import App from "./App.jsx";
 import {ToDoProvider} from "./provider/ToDoProvider";
 
 createRoot(document.getElementById("root")).render(
-  <BrowserRouter>
+  <BrowserRouter basename="/ToDo-List-API">
     <ToDoProvider>
       <App />
     </ToDoProvider>
