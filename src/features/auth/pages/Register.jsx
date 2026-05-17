@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import InputLogin from "../components/InputLogin";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -72,10 +73,10 @@ const Register = () => {
         {success && <div className="success-message">{success}</div>}
 
         <form onSubmit={handleSubmit} className="login__form">
-          <div className="form-group">
             {/*Логин */}
+          <div className="form-group">
             <label>Логин</label>
-            <input
+            <InputLogin
               type="text"
               name="username"
               value={formData.username}
@@ -85,10 +86,10 @@ const Register = () => {
             />
           </div>
 
-          <div className="form-group">
             {/*E-mail */}
+          <div className="form-group">
             <label>E-mail</label>
-            <input
+            <InputLogin
               type="email"
               name="email"
               value={formData.email}
@@ -98,10 +99,10 @@ const Register = () => {
             />
           </div>
 
-          <div className="form-group">
             {/*Пароль */}
+          <div className="form-group">
             <label>Пароль</label>
-            <input
+            <InputLogin
               type="password"
               name="password"
               value={formData.password}
@@ -111,10 +112,10 @@ const Register = () => {
             />
           </div>
 
-          <div className="form-group">
             {/*Gender */}
+          <div className="form-group">
             <label>Пол</label>
-            <input
+            <InputLogin
               type="text"
               name="gender"
               value={formData.gender}
@@ -124,10 +125,10 @@ const Register = () => {
             />
           </div>
 
-          <div className="form-group">
             {/*Возраст */}
+          <div className="form-group">
             <label>Возраст</label>
-            <input
+            <InputLogin
               type="number"
               name="age"
               value={formData.age}

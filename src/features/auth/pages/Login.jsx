@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import InputLogin from "../components/InputLogin";
 
 const Login = () => {
   const location = useLocation();
@@ -67,7 +68,7 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="login__form">
           <div className="form-group">
             <label>Логин</label>
-            <input
+            <InputLogin
               type="text"
               name="email"
               value={formData.email}
@@ -79,7 +80,7 @@ const Login = () => {
 
           <div className="form-group">
             <label>Пароль</label>
-            <input
+            <InputLogin
               type="password"
               name="password"
               value={formData.password}

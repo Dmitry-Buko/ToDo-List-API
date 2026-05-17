@@ -1,4 +1,4 @@
-import { useTodo } from "./provider/ToDoContext";
+import { useTodo } from "../context/ToDoContext";
 
 const FilteredTasks = () => {
   const { filter, setFilter, activeCount, clearCompeted } = useTodo();

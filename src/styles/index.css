@@ -210,3 +210,9 @@ form {
   font-size: 18px;
   margin: 15px auto;
 }
+.nothing{
+  margin: 35px 0;
+}
+.success-message{
+  margin: 20px auto;
+}

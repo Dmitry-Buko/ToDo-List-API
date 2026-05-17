@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
-import { useTodo } from "./provider/ToDoContext";
+import { useTodo } from "../context/ToDoContext";
+import ErrorBox from "../../shared/ui/ErrorBox";
 
 const InputTask = () => {
   const { addTask, loadingAddTask } = useTodo();
@@ -33,15 +34,10 @@ const InputTask = () => {
           placeholder="Новая задача..."
         />
         <button className="add-task-form__submit" type="submit">
-          {loadingAddTask ? 'Добавление...' : 'Добавить ➕'}
+          {loadingAddTask ? "Добавление..." : "Добавить ➕"}
         </button>
       </form>
-      {error && (
-        <div className="error-box">
-          <span className="error-icon">⚠️</span>
-          <span className="error-text">{error}</span>
-        </div>
-      )}
+      {error && <ErrorBox error={error} />}
     </div>
   );
 };

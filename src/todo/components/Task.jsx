@@ -1,5 +1,8 @@
 import { useCallback, useState } from "react";
-import { useTodo } from "./provider/ToDoContext";
+import { useTodo } from "../context/ToDoContext";
+import ErrorBox from "../../shared/ui/ErrorBox";
+import TaskText from "./TaskText";
+import TaskEditForm from "./TaskEditForm";
 
 const Task = ({ task }) => {
   const {
@@ -21,7 +24,7 @@ const Task = ({ task }) => {
       if (success) {
         setError("");
         setIsEdit(false);
-        setEditText(text)
+        setEditText(text);
         return true;
       }
       return false;
@@ -60,27 +63,17 @@ const Task = ({ task }) => {
       <div className="task__content">
         {isEdit ? (
           <div className="edit-wrapper">
-            <input
-              value={editText}
-              onChange={(e) => {
-                setEditText(e.target.value);
-                if (error) setError("");
-              }}
-              onKeyDown={handleKeyDown}
-              className={`edit-wrapper__input ${error ? "error" : ""}`}
-              autoFocus
+            <TaskEditForm
+              editText={editText}
+              setEditText={setEditText}
+              error={error}
+              setError={setError}
+              handleKeyDown={handleKeyDown}
             />
-            {error && (
-              <div className="error-box">
-                <span className="error-icon">⚠️</span>
-                <span className="error-text">{error}</span>
-              </div>
-            )}
+            {error && <ErrorBox error={error} />}
           </div>
         ) : (
-          <p className={`task__text ${task.isCompleted ? "done" : ""}`}>
-            {task.title}
-          </p>
+          <TaskText task={task} />
         )}
       </div>
 
@@ -98,8 +91,8 @@ const Task = ({ task }) => {
         </button>
         <button
           onClick={() => deleteTask(task.id)}
-          className="task__btn--delete"
           disabled={loading}
+          className="task__btn--delete"
         >
           {loadingDeleteTask ? "Удаление.." : "Удалить 🗑"}
         </button>
