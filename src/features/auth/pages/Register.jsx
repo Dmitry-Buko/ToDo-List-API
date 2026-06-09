@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import InputLogin from "../components/InputLogin";
+import BasicButtons from '../../../todo/mui components/BasicButtons'
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -138,9 +139,9 @@ const Register = () => {
             />
           </div>
 
-          <button type="submit" disabled={loading} className="form-group__btn-enter">
-            {loading ? "Регистрация..." : "Зарегистрироваться"}
-          </button>
+          <BasicButtons loading={loading} type="submit" disabled={loading} className="form-group__btn-enter">
+            {/* {loading ? "Регистрация..." : "Зарегистрироваться"} */}
+          </BasicButtons>
         </form>
 
         <p className="switch-link">

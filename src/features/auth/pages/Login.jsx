@@ -24,7 +24,7 @@ const Login = () => {
     setError("");
     setSuccess("");
 
-    const url = "https://todo-redev.herokuapp.com/api/auth/login";
+    const url = "https://todo-redev.onrender.com/api/auth/register";
     const config = {
       headers: {
         Accept: "application/json",
