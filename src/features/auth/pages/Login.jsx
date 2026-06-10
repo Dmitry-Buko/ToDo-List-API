@@ -24,7 +24,7 @@ const Login = () => {
     setError("");
     setSuccess("");
 
-    const url = "https://todo-redev.onrender.com/api/auth/register";
+    const url = "https://todo-redev.onrender.com/api/auth/login";
     const config = {
       headers: {
         Accept: "application/json",
@@ -32,10 +32,11 @@ const Login = () => {
       },
     };
     try {
-      const response = await axios.post(url, formData, config);
-      const token = response.data?.token;
+      await axios.post(url, formData, config);
+      const token = localStorage.getItem('token')
+      console.log('2 token: ', token);
+      
       if (token) {
-        localStorage.setItem("token", token);
         setSuccess("Вход успешно выполнен!");
         setFormData({
           email: "",

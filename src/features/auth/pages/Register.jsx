@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import InputLogin from "../components/InputLogin";
-import BasicButtons from '../../../todo/mui components/BasicButtons'
+// import BasicButtons from '../../../todo/mui components/BasicButtons'
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -29,7 +29,7 @@ const Register = () => {
     
     try {
       const response = await axios.post(
-        "https://todo-redev.herokuapp.com/api/users/register",
+        "https://todo-redev.onrender.com/api/auth/register",
         formData,
         {
           headers: {
@@ -38,6 +38,10 @@ const Register = () => {
           },
         },
       );
+      const token = response.data?.access_token;
+      localStorage.setItem("token", token);
+      console.log(token);
+      
       setTimeout(() => {
         navigate("/login", {
           state: {
@@ -139,9 +143,9 @@ const Register = () => {
             />
           </div>
 
-          <BasicButtons loading={loading} type="submit" disabled={loading} className="form-group__btn-enter">
-            {/* {loading ? "Регистрация..." : "Зарегистрироваться"} */}
-          </BasicButtons>
+          <button type="submit" disabled={loading} className="form-group__btn-enter">
+            {loading ? "Регистрация..." : "Зарегистрироваться"}
+          </button>
         </form>
 
         <p className="switch-link">
