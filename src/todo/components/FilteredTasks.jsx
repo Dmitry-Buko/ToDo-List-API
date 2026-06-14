@@ -1,7 +1,10 @@
+import { useDispatch } from "react-redux";
 import { useTodo } from "../context/ToDoContext";
+import { clearCompetedTodos } from "../RTK/taksSlice";
 
 const FilteredTasks = () => {
   const { filter, setFilter, activeCount, clearCompeted } = useTodo();
+  const dispatch = useDispatch();
 
   return (
     <div className="todo__footer">
@@ -29,7 +32,7 @@ const FilteredTasks = () => {
         <p className="todo__counter">Осталось дел: {activeCount}</p>
         <button
           className="todo__clear-completed"
-          onClick={() => clearCompeted()}
+          onClick={() => dispatch(clearCompetedTodos())}
         >
           Очистить выполненные
         </button>

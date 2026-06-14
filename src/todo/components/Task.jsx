@@ -1,35 +1,40 @@
 import { useCallback, useState } from "react";
-import { useTodo } from "../context/ToDoContext";
+// import { useTodo } from "../context/ToDoContext";
 import ErrorBox from "../../shared/ui/ErrorBox";
 import TaskText from "./TaskText";
 import TaskEditForm from "./TaskEditForm";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteTodos, editTodos, togglerTodos } from "../RTK/taksSlice";
 
 const Task = ({ task }) => {
-  const {
-    deleteTask,
-    isDoneToggler,
-    editTitle,
-    loading,
-    loadingDeleteTask,
-    loadingChangeTask,
-  } = useTodo();
-
+  // const {
+  //   // deleteTask,
+  //   // isDoneToggler,
+  //   // editTitle,
+  //   // loading,
+  //   // loadingDeleteTask,
+  //   // loadingChangeTask,
+  // } = useTodo();
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState(task.title || "");
-  const [error, setError] = useState("");
+  const [localError, setError] = useState("");
+
+  const { loading } = useSelector((state) => state.task);
+  const dispatch = useDispatch();
 
   const validateAndSave = useCallback(
     async (text) => {
-      const success = await editTitle(task.id, text, setError);
-      if (success) {
-        setError("");
-        setIsEdit(false);
-        setEditText(text);
-        return true;
+      if (!text.trim()) {
+        setError("ПУСТАЯ СТРОКА Task.js");
+        return;
       }
+      await dispatch(editTodos({ id: task.id, newTitle: text }));
+      setError("");
+      setIsEdit(false);
+      setEditText(text);
       return false;
     },
-    [editTitle, task.id],
+    [dispatch, task.id],
   );
 
   const handleKeyDown = async (e) => {
@@ -57,7 +62,7 @@ const Task = ({ task }) => {
         type="checkbox"
         className="task__checkbox"
         checked={!!task.completed}
-        onChange={() => isDoneToggler(task.id)}
+        onChange={() => dispatch(togglerTodos(task.id))}
       />
 
       <div className="task__content">
@@ -66,11 +71,11 @@ const Task = ({ task }) => {
             <TaskEditForm
               editText={editText}
               setEditText={setEditText}
-              error={error}
+              error={localError}
               setError={setError}
               handleKeyDown={handleKeyDown}
             />
-            {error && <ErrorBox error={error} />}
+            {localError && <ErrorBox error={localError} />}
           </div>
         ) : (
           <TaskText task={task} />
@@ -83,18 +88,15 @@ const Task = ({ task }) => {
           disabled={loading}
           className="task__btn--edit"
         >
-          {isEdit
-            ? "Сохранить ✅"
-            : loadingChangeTask
-              ? "Изменение.."
-              : "Изменить ✍️"}
+          {isEdit ? "Сохранить ✅" : loading ? "Изменение.." : "Изменить ✍️"}
         </button>
+
         <button
-          onClick={() => deleteTask(task.id)}
+          onClick={() => dispatch(deleteTodos(task.id))}
           disabled={loading}
           className="task__btn--delete"
         >
-          {loadingDeleteTask ? "Удаление.." : "Удалить 🗑"}
+          {loading ? "Удаление.." : "Удалить 🗑"}
         </button>
       </div>
     </div>

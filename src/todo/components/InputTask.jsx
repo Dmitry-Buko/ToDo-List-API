@@ -1,23 +1,29 @@
 import { useCallback, useState } from "react";
-import { useTodo } from "../context/ToDoContext";
+// import { useTodo } from "../context/ToDoContext";
 import ErrorBox from "../../shared/ui/ErrorBox";
+import { useDispatch, useSelector } from "react-redux";
+import { addTodos } from "../RTK/taksSlice";
 
 const InputTask = () => {
-  const { addTask, loadingAddTask } = useTodo();
+  // const { addTask, loadingAddTask } = useTodo();
   const [text, setText] = useState("");
-  const [error, setError] = useState("");
+  const [localError, setError] = useState("");
+  const dispatch = useDispatch()
+  const {loading, error} = useSelector(state => state.task)
+// console.log('taskValue', taskValue);
 
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
-      const success = await addTask(text, setError);
-      if (success) {
+      if(!text.trim()){
+        setError("ПУСТАЯ СТРОКА")
+        return
+      }
+      dispatch(addTodos(text))
         setText("");
         setError("");
-      }
-      setText("");
     },
-    [addTask, text],
+    [dispatch, text],
   );
 
   return (
@@ -27,16 +33,17 @@ const InputTask = () => {
           type="text"
           value={text}
           onChange={(e) => {
-            if (error) setError("");
+            if (localError) setError("");
             setText(e.target.value);
           }}
-          className={`todo__input-task ${error ? "error" : ""}`}
+          className={`todo__input-task ${localError ? "error" : ""}`}
           placeholder="Новая задача..."
         />
         <button className="add-task-form__submit" type="submit">
-          {loadingAddTask ? "Добавление..." : "Добавить ➕"}
+          {loading ? "Добавление..." : "Добавить ➕"}
         </button>
       </form>
+      {localError && <ErrorBox error={localError} />}
       {error && <ErrorBox error={error} />}
     </div>
   );

@@ -68,13 +68,13 @@ const Login = () => {
 
         <form onSubmit={handleSubmit} className="login__form">
           <div className="form-group">
-            <label>Логин</label>
+            <label>E-mail</label>
             <InputLogin
               type="text"
               name="email"
               value={formData.email}
               onChange={handleChange}
-              placeholder="Введите логин"
+              placeholder="Введите e-mail"
               required
             />
           </div>
