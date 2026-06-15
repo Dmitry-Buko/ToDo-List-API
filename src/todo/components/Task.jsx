@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-// import { useTodo } from "../context/ToDoContext";
 import ErrorBox from "../../shared/ui/ErrorBox";
 import TaskText from "./TaskText";
 import TaskEditForm from "./TaskEditForm";
@@ -7,14 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteTodos, editTodos, togglerTodos } from "../RTK/taksSlice";
 
 const Task = ({ task }) => {
-  // const {
-  //   // deleteTask,
-  //   // isDoneToggler,
-  //   // editTitle,
-  //   // loading,
-  //   // loadingDeleteTask,
-  //   // loadingChangeTask,
-  // } = useTodo();
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState(task.title || "");
   const [localError, setError] = useState("");

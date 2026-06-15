@@ -3,7 +3,7 @@ import { useTodo } from "../context/ToDoContext";
 import { clearCompetedTodos } from "../RTK/taksSlice";
 
 const FilteredTasks = () => {
-  const { filter, setFilter, activeCount, clearCompeted } = useTodo();
+  const { filter, setFilter, activeCount } = useTodo();
   const dispatch = useDispatch();
 
   return (

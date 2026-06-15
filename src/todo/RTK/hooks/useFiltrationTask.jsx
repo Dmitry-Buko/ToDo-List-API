@@ -5,7 +5,7 @@ const useFiltrationTask = () => {
   const { taskValue = [], filter = "all" } = useSelector((state) => state.task);
 
   const filteredTask = useMemo(() => {
-    console.log('taskValue', taskValue);
+    // console.log('taskValue', taskValue);
     
     switch (filter) {
       case "active":

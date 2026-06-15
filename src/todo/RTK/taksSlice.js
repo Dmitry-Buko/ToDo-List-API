@@ -74,16 +74,16 @@ export const togglerTodos = createAsyncThunk(
 export const clearCompetedTodos = createAsyncThunk(
   "todo/clearCompetedTodos",
   async (_, thunkAPI) => {
-    const completedTask = initialState.taskValue.filter(
-      (item) => item.completed,
-    );
+    const state = thunkAPI.getState();
+    const completedTask = state.task.taskValue.filter((item) => item.completed);
     if (completedTask.length === 0) return;
     try {
       const deletePromise = completedTask.map((taks) => {
         api.delete(`/todos/${taks.id}`);
       });
-      await Promise.all(deletePromise);
-      console.log("111:", deletePromise.data);
+      await Promise.all(deletePromise)
+      .then(data => console.log("deletePromise.data:::", data))
+      // console.log("deletePromise.data:::", deletePromise);
       return deletePromise.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -105,7 +105,17 @@ const handleRejected = (state, action) => {
 const taskSlice = createSlice({
   name: "tasks",
   initialState,
-  reducers: {},
+  reducers: {
+    setErrorTask: (state, action) => {
+      state.error = action.payload;
+    },
+    fetchTasks: (state, action) => {
+      const taskFromServer = action.payload;
+      taskFromServer.forEach((el) => {
+        state.taskValue.push(el);
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(addTodos.fulfilled, (state, action) => {
@@ -147,8 +157,10 @@ const taskSlice = createSlice({
       .addCase(clearCompetedTodos.fulfilled, (state) => {
         state.taskValue = state.taskValue.filter((task) => !task.completed);
         state.loading = false;
-      });
+      })
+      .addCase(clearCompetedTodos.rejected, handleRejected);
   },
 });
 
 export default taskSlice.reducer;
+export const { setErrorTask, fetchTasks } = taskSlice.actions;

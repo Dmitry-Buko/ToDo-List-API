@@ -34,7 +34,6 @@ const Login = () => {
     try {
       await axios.post(url, formData, config);
       const token = localStorage.getItem('token')
-      console.log('2 token: ', token);
       
       if (token) {
         setSuccess("Вход успешно выполнен!");

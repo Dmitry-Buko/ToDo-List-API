@@ -40,8 +40,6 @@ const Register = () => {
       );
       const token = response.data?.access_token;
       localStorage.setItem("token", token);
-      console.log(token);
-      
       setTimeout(() => {
         navigate("/login", {
           state: {

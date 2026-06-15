@@ -1,13 +1,10 @@
 import { useSelector } from "react-redux";
-// import { useTodo } from "../context/ToDoContext";
 import Task from "./Task";
 import useFiltrationTask from "../RTK/hooks/useFiltrationTask";
 
 const ToDoList = () => {
-  // const { filteredTasks, loading } = useTodo();
   const { loading } = useSelector((state) => state.task);
   const filteredTask = useFiltrationTask();
-  // console.log("filteredTask", filteredTask);
 
   if (loading) return <h1 className="nothing">Загрузка...</h1>;
   if (filteredTask.length === 0)
