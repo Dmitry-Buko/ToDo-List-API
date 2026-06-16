@@ -9,8 +9,8 @@ const Login = () => {
     email: location.state?.email || "",
     password: location.state?.password || "",
   });
-  const [error, setError] = useState(""); 
-  const [loading, setLoading] = useState(false); 
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
@@ -32,18 +32,19 @@ const Login = () => {
       },
     };
     try {
-      await axios.post(url, formData, config);
-      const token = localStorage.getItem('token')
-      
+      const response = await axios.post(url, formData, config);
+      console.log("response", response.data.access_token);
+      const token = response.data.access_token;
+      localStorage.setItem("token", token);
       if (token) {
         setSuccess("Вход успешно выполнен!");
         setFormData({
           email: "",
           password: "",
         });
-        setTimeout(()=>{
-          navigate('/todo')
-        },1500)
+        setTimeout(() => {
+          navigate("/todo");
+        }, 1500);
       } else {
         setError("Токен не получен!");
       }
@@ -90,14 +91,20 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" disabled={loading} className="form-group__btn-enter">
+          <button
+            type="submit"
+            disabled={loading}
+            className="form-group__btn-enter"
+          >
             {loading ? "Вход..." : "Войти"}
           </button>
         </form>
 
         <p className="switch-link">
           Нет аккаунта?
-          <Link to="/register" className="switch-link__login">Зарегистрироваться</Link>
+          <Link to="/register" className="switch-link__login">
+            Зарегистрироваться
+          </Link>
         </p>
       </div>
     </div>

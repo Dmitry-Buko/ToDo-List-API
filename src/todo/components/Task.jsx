@@ -4,6 +4,13 @@ import TaskText from "./TaskText";
 import TaskEditForm from "./TaskEditForm";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTodos, editTodos, togglerTodos } from "../RTK/taksSlice";
+import TaskCheckbox from "../mui components/Checkbox";
+import Paper from "@mui/material/Paper";
+import Box from "@mui/material/Box";
+import LoadingButton from "@mui/lab/LoadingButton";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 
 const Task = ({ task }) => {
   const [isEdit, setIsEdit] = useState(false);
@@ -16,7 +23,7 @@ const Task = ({ task }) => {
   const validateAndSave = useCallback(
     async (text) => {
       if (!text.trim()) {
-        setError("ПУСТАЯ СТРОКА Task.js");
+        setError("Пустая строка");
         return;
       }
       await dispatch(editTodos({ id: task.id, newTitle: text }));
@@ -48,49 +55,98 @@ const Task = ({ task }) => {
   };
 
   return (
-    <div className="task">
-      <input
-        type="checkbox"
-        className="task__checkbox"
-        checked={!!task.completed}
-        onChange={() => dispatch(togglerTodos(task.id))}
-      />
-
-      <div className="task__content">
-        {isEdit ? (
-          <div className="edit-wrapper">
-            <TaskEditForm
-              editText={editText}
-              setEditText={setEditText}
-              error={localError}
-              setError={setError}
-              handleKeyDown={handleKeyDown}
-            />
-            {localError && <ErrorBox error={localError} />}
-          </div>
-        ) : (
-          <TaskText task={task} />
-        )}
-      </div>
-
-      <div className="task__actions">
-        <button
+    <Paper
+      elevation={0}
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "12px 16px",
+        borderRadius: "12px",
+        border: "1px solid #eef2f6",
+        backgroundColor: "#fff",
+        width: "100%",
+        maxWidth: "550px",
+        margin: "8px auto",
+        transition: "all 0.2s ease",
+        "&:hover": {
+          borderColor: "#dcdfe4",
+        },
+      }}
+    >
+      <Box sx={{ display: "flex", alignItems: "center", gap: "16px", flex: 1 }}>
+        <TaskCheckbox
+          checked={!!task.completed}
+          onChange={() => dispatch(togglerTodos(task.id))}
+        />
+        <Box sx={{ flex: 1 }}>
+          {isEdit ? (
+            <Box
+              sx={{ display: "flex", flexDirection: "column", width: "100%" }}
+            >
+              <TaskEditForm
+                editText={editText}
+                setEditText={setEditText}
+                error={localError}
+                setError={setError}
+                handleKeyDown={handleKeyDown}
+              />
+              {localError && <ErrorBox error={localError} />}
+            </Box>
+          ) : (
+            <TaskText task={task} />
+          )}
+        </Box>
+      </Box>
+      <Box sx={{ display: "flex", gap: "8px", marginLeft: "16px" }}>
+        <LoadingButton
           onClick={toggleEdit}
-          disabled={loading}
-          className="task__btn--edit"
+          loading={!isEdit && loading}
+          disabled={isEdit && loading}
+          variant="text"
+          size="small"
+          startIcon={isEdit ? <CheckCircleIcon /> : <EditIcon />}
+          sx={{
+            color: isEdit ? "#2e7d32" : "#4a5568",
+            textTransform: "none",
+            borderRadius: "8px",
+            backgroundColor: isEdit ? "#edf7ed" : "#f7fafc",
+            fontWeight: 500,
+            "&:hover": {
+              backgroundColor: isEdit ? "#e8f5e9" : "#edf2f7",
+            },
+            "&.Mui-disabled": {
+              backgroundColor: "#f7fafc",
+            },
+          }}
         >
-          {isEdit ? "Сохранить ✅" : loading ? "Изменение.." : "Изменить ✍️"}
-        </button>
+          {isEdit ? "Сохранить" : "Изменить"}
+        </LoadingButton>
 
-        <button
+        <LoadingButton
           onClick={() => dispatch(deleteTodos(task.id))}
-          disabled={loading}
-          className="task__btn--delete"
+          loading={loading}
+          variant="text"
+          size="small"
+          startIcon={<DeleteIcon />}
+          sx={{
+            color: "#e53e3e",
+            textTransform: "none",
+            borderRadius: "8px",
+            backgroundColor: "#fff5f5",
+            fontWeight: 500,
+            "&:hover": {
+              backgroundColor: "#fed7d7",
+            },
+            "&.Mui-disabled": {
+              backgroundColor: "#fff5f5",
+            },
+          }}
         >
-          {loading ? "Удаление.." : "Удалить 🗑"}
-        </button>
-      </div>
-    </div>
+          Удалить
+        </LoadingButton>
+      </Box>
+    </Paper>
   );
 };
 

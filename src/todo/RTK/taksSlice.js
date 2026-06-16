@@ -10,7 +10,9 @@ const initialState = {
 
 export const addTodos = createAsyncThunk(
   "todo/addTodos",
-  async (newTodo, thunkAPI) => {
+  async (_, thunkAPI) => {
+    const state = thunkAPI.getState();
+    const newTodo = state.text.inputValue;
     try {
       const response = await api.post("/todos", {
         title: newTodo,
@@ -43,7 +45,6 @@ export const editTodos = createAsyncThunk(
   "todo/editTodos",
   async (inputData, thunkAPI) => {
     const { id, newTitle } = inputData;
-    // console.log('inputData', newTitle);
     try {
       const response = await api.patch(`/todos/${id}`, {
         title: newTitle,
@@ -81,9 +82,9 @@ export const clearCompetedTodos = createAsyncThunk(
       const deletePromise = completedTask.map((taks) => {
         api.delete(`/todos/${taks.id}`);
       });
-      await Promise.all(deletePromise)
-      .then(data => console.log("deletePromise.data:::", data))
-      // console.log("deletePromise.data:::", deletePromise);
+      await Promise.all(deletePromise).then((data) =>
+        console.log("deletePromise.data:::", data),
+      );
       return deletePromise.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -92,6 +93,11 @@ export const clearCompetedTodos = createAsyncThunk(
     }
   },
 );
+
+export const logout = createAsyncThunk("auth/logout", async () => {
+  localStorage.removeItem("token");
+  return;
+});
 
 const handlePending = (state) => {
   state.loading = true;
@@ -114,6 +120,9 @@ const taskSlice = createSlice({
       taskFromServer.forEach((el) => {
         state.taskValue.push(el);
       });
+    },
+    setFilter: (state, action) => {
+      state.filter = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -158,9 +167,17 @@ const taskSlice = createSlice({
         state.taskValue = state.taskValue.filter((task) => !task.completed);
         state.loading = false;
       })
-      .addCase(clearCompetedTodos.rejected, handleRejected);
+      .addCase(clearCompetedTodos.rejected, handleRejected)
+      //---------------------------------------------
+      .addCase(logout.pending, handlePending)
+      .addCase(logout.fulfilled, (state) => {
+        state.taskValue = [];
+        state.loading = false;
+        state.error = "";
+      })
+      .addCase(logout.rejected, handleRejected);
   },
 });
 
 export default taskSlice.reducer;
-export const { setErrorTask, fetchTasks } = taskSlice.actions;
+export const { setErrorTask, fetchTasks, setFilter } = taskSlice.actions;

@@ -102,12 +102,12 @@ form {
   background-color: #bfc4ca;
 }
 .todo__input-task {
-  width: 200px;
+  width: 420px;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 15px;
 }
-.switch-link__login{
+.switch-link__login {
   text-decoration: none;
   color: #3b82f6;
   transition: color 0.2s ease;
@@ -161,6 +161,7 @@ form {
 .task__text {
   margin: 0;
   font-size: 20px;
+  text-align: start;
 }
 
 .task__actions {
@@ -210,9 +211,21 @@ form {
   font-size: 18px;
   margin: 15px auto;
 }
-.nothing{
+.nothing {
   margin: 35px 0;
 }
-.success-message{
+.success-message {
   margin: 20px auto;
+}
+.header {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}
+.btn-logout {
+  position: absolute ;
+  top: 20px;
+  right: 20px;
 }
