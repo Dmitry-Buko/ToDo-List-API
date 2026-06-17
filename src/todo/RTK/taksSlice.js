@@ -82,9 +82,7 @@ export const clearCompetedTodos = createAsyncThunk(
       const deletePromise = completedTask.map((taks) => {
         api.delete(`/todos/${taks.id}`);
       });
-      await Promise.all(deletePromise).then((data) =>
-        console.log("deletePromise.data:::", data),
-      );
+      await Promise.all(deletePromise)
       return deletePromise.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -124,6 +122,9 @@ const taskSlice = createSlice({
     setFilter: (state, action) => {
       state.filter = action.payload;
     },
+    clearError: (state)=>{
+      state.error = "";
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -180,4 +181,4 @@ const taskSlice = createSlice({
 });
 
 export default taskSlice.reducer;
-export const { setErrorTask, fetchTasks, setFilter } = taskSlice.actions;
+export const { setErrorTask, fetchTasks, setFilter, clearError } = taskSlice.actions;

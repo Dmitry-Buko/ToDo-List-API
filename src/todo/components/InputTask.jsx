@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import ErrorBox from "../../shared/ui/ErrorBox";
 import { useDispatch, useSelector } from "react-redux";
 import { addTodos } from "../RTK/taksSlice";
 import { addInputValue, setInputError } from "../RTK/inputSlice";
@@ -16,7 +15,7 @@ const InputTask = () => {
     async (e) => {
       e.preventDefault();
       if (!inputValue.trim()) {
-        dispatch(setInputError("ПУСТАЯ СТРОКА"));
+        dispatch(setInputError("Задача не может быть пустой!"));
         return;
       }
       dispatch(addTodos());
@@ -51,7 +50,6 @@ const InputTask = () => {
           <AddTaskButton loading={loading} />
         </Box>
       </form>
-      {/* {inputError && <ErrorBox error={inputError} />} */}
     </div>
   );
 };

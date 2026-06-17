@@ -1,9 +1,9 @@
-import LoadingButton from '@mui/lab/LoadingButton';
+import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 
 export default function AddTaskButton({ loading }) {
   return (
-    <LoadingButton
+    <Button
       type="submit"
       loading={loading}
       loadingPosition="start"
@@ -25,19 +25,17 @@ export default function AddTaskButton({ loading }) {
           boxShadow: 'none',
         },
         
-        // Стили кнопки во время загрузки (когда она disabled)
         '&.Mui-disabled': {
           backgroundColor: '#a5b4fc',
           color: '#ffffff',
         },
         
-        // Цвет самого крутящегося спиннера
         '& .MuiLoadingButton-loadingIndicator': {
           color: '#fff',
         },
       }}
     >
       Добавить
-    </LoadingButton>
+    </Button>
   );
 }

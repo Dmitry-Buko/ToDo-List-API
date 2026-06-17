@@ -1,13 +1,17 @@
 import { useCallback, useState } from "react";
-import ErrorBox from "../../shared/ui/ErrorBox";
 import TaskText from "./TaskText";
 import TaskEditForm from "./TaskEditForm";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteTodos, editTodos, togglerTodos } from "../RTK/taksSlice";
+import {
+  deleteTodos,
+  editTodos,
+  setErrorTask,
+  togglerTodos,
+} from "../RTK/taksSlice";
 import TaskCheckbox from "../mui components/Checkbox";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-import LoadingButton from "@mui/lab/LoadingButton";
+import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
@@ -15,19 +19,18 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 const Task = ({ task }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState(task.title || "");
-  const [localError, setError] = useState("");
 
-  const { loading } = useSelector((state) => state.task);
+  const { loading, error } = useSelector((state) => state.task);
   const dispatch = useDispatch();
 
   const validateAndSave = useCallback(
     async (text) => {
       if (!text.trim()) {
-        setError("Пустая строка");
+        dispatch(setErrorTask("Задача не может быть пустой!"));
         return;
       }
       await dispatch(editTodos({ id: task.id, newTitle: text }));
-      setError("");
+      dispatch(setErrorTask(""));
       setIsEdit(false);
       setEditText(text);
       return false;
@@ -41,7 +44,7 @@ const Task = ({ task }) => {
     } else if (e.key === "Escape") {
       setIsEdit(false);
       setEditText(task.title);
-      setError("");
+      dispatch(setErrorTask(""));
     }
   };
 
@@ -50,7 +53,7 @@ const Task = ({ task }) => {
       await validateAndSave(editText);
     } else {
       setIsEdit(true);
-      setError("");
+      dispatch(setErrorTask(""));
     }
   };
 
@@ -87,11 +90,10 @@ const Task = ({ task }) => {
               <TaskEditForm
                 editText={editText}
                 setEditText={setEditText}
-                error={localError}
-                setError={setError}
+                error={error}
+                setError={(error) => dispatch(setErrorTask(error))}
                 handleKeyDown={handleKeyDown}
               />
-              {localError && <ErrorBox error={localError} />}
             </Box>
           ) : (
             <TaskText task={task} />
@@ -99,7 +101,7 @@ const Task = ({ task }) => {
         </Box>
       </Box>
       <Box sx={{ display: "flex", gap: "8px", marginLeft: "16px" }}>
-        <LoadingButton
+        <Button
           onClick={toggleEdit}
           loading={!isEdit && loading}
           disabled={isEdit && loading}
@@ -120,10 +122,9 @@ const Task = ({ task }) => {
             },
           }}
         >
-          {isEdit ? "Сохранить" : "Изменить"}
-        </LoadingButton>
+        </Button>
 
-        <LoadingButton
+        <Button
           onClick={() => dispatch(deleteTodos(task.id))}
           loading={loading}
           variant="text"
@@ -143,8 +144,7 @@ const Task = ({ task }) => {
             },
           }}
         >
-          Удалить
-        </LoadingButton>
+        </Button>
       </Box>
     </Paper>
   );

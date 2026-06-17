@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { clearCompetedTodos, setFilter } from "../RTK/taksSlice";
 import { useMemo } from "react";
+import TodoFooter from "../mui components/TodoFooter";
 
 const FilteredTasks = () => {
   const dispatch = useDispatch();
@@ -15,37 +16,13 @@ const FilteredTasks = () => {
   }, [taskValue]);
 
   return (
-    <div className="todo__footer">
-      <div className="filters">
-        <button
-          className={`filters__btn ${filter === "all" ? "filters__btn--active" : ""}`}
-          onClick={() => dispatch(setFilter("all"))}
-        >
-          Все
-        </button>
-        <button
-          className={`filters__btn ${filter === "active" ? "filters__btn--active" : ""}`}
-          onClick={() => dispatch(setFilter("active"))}
-        >
-          Активные
-        </button>
-        <button
-          className={`filters__btn ${filter === "completed" ? "filters__btn--active" : ""}`}
-          onClick={() => dispatch(setFilter("completed"))}
-        >
-          Завершенные
-        </button>
-      </div>
-      <div className="footer">
-        <p className="todo__counter">Осталось дел: {activeCount}</p>
-        <button
-          className="todo__clear-completed"
-          onClick={() => dispatch(clearCompetedTodos())}
-        >
-          Очистить выполненные
-        </button>
-      </div>
-    </div>
+    <TodoFooter
+      filter={filter}
+      activeCount={activeCount}
+      dispatch={dispatch}
+      setFilter={setFilter}
+      clearCompetedTodos={clearCompetedTodos}
+    />
   );
 };
 
