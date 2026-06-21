@@ -1,8 +1,8 @@
-import ErrorSnackbar from "../mui components/ErrorSnackbar";
-import { clearError } from "../RTK/taksSlice";
-import FilteredTasks from "./FilteredTasks";
-import InputTask from "./InputTask";
-import ToDoList from "./ToDoList";
+import ErrorSnackbar from "../shared/ui/mui_components/ErrorSnackbar";
+import { clearError } from "../todo/store/taskSlice";
+import FilteredTasks from "../todo/components/FilteredTasks";
+import InputTask from "../todo/components/InputTask";
+import ToDoList from "../todo/components/ToDoList";
 import { useSelector, useDispatch } from "react-redux";
 
 const ToDo = () => {

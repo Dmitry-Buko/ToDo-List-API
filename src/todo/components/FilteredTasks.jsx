@@ -1,11 +1,14 @@
-import { useDispatch, useSelector } from "react-redux";
-import { clearCompetedTodos, setFilter } from "../RTK/taksSlice";
 import { useMemo } from "react";
-import TodoFooter from "../mui components/TodoFooter";
+import { useDispatch, useSelector } from "react-redux";
+import { clearCompetedTodos, setFilter } from "../store/taskSlice";
+import { selectCurrentFilter, selectTodos } from "../../app/store";
+import TodoFooter from "../../shared/ui/mui_components/TodoFooter";
+
 
 const FilteredTasks = () => {
   const dispatch = useDispatch();
-  const { taskValue, filter } = useSelector((state) => state.task);
+  const taskValue = useSelector(selectTodos)
+  const filter = useSelector(selectCurrentFilter)
 
   const activeCount = useMemo(() => {
     let count = 0;

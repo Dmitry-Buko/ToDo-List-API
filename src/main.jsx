@@ -1,9 +1,9 @@
 import { BrowserRouter } from "react-router-dom";
 import { createRoot } from "react-dom/client";
-import "./styles/index.css";
+import "./shared/styles/index.css";
 import App from "./app/App.jsx";
 import { Provider } from "react-redux";
-import store from "./todo/RTK/store.js";
+import store from "./app/store.js";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter basename="/ToDo-List-API">

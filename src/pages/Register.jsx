@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import InputLogin from "../components/InputLogin";
+import InputLogin from "../shared/ui/InputLogin";
 // import BasicButtons from '../../../todo/mui components/BasicButtons'
 
 const Register = () => {

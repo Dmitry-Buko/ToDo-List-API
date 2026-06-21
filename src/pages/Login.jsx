@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import InputLogin from "../components/InputLogin";
+import InputLogin from "../shared/ui/InputLogin";
 
 const Login = () => {
   const location = useLocation();
@@ -33,7 +33,6 @@ const Login = () => {
     };
     try {
       const response = await axios.post(url, formData, config);
-      console.log("response", response.data.access_token);
       const token = response.data.access_token;
       localStorage.setItem("token", token);
       if (token) {

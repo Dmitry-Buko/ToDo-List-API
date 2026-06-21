@@ -1,14 +1,14 @@
 import { useCallback, useState } from "react";
-import TaskText from "./TaskText";
-import TaskEditForm from "./TaskEditForm";
+import TaskText from "../../shared/ui/TaskText";
+import TaskEditForm from "../../shared/ui/TaskEditForm";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteTodos,
   editTodos,
   setErrorTask,
   togglerTodos,
-} from "../RTK/taksSlice";
-import TaskCheckbox from "../mui components/Checkbox";
+} from "../store/taskSlice";
+import TaskCheckbox from "../../shared/ui/mui_components/Checkbox";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";

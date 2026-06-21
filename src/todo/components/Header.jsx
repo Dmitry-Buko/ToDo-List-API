@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
-import { logout } from "../rtk/taksSlice";
+import { logout } from "../store/taskSlice";
 import { useNavigate } from "react-router-dom";
-import ButtonLogout from "../mui components/ButtonLogout";
+import ButtonLogout from "../../shared/ui/mui_components/ButtonLogout";
 
 const Header = () => {
   const dispatch = useDispatch();

@@ -1,13 +1,14 @@
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Task from "./Task";
-import useFiltrationTask from "../RTK/hooks/useFiltrationTask";
-import { useEffect } from "react";
-import api from "../api/todoApi";
-import { fetchTasks, setErrorTask } from "../RTK/taksSlice";
+import api from "../../features/auth/todoApi";
+import { fetchTasks, setErrorTask } from "../store/taskSlice";
+import { selectFilteredTodos } from "../../app/store";
+
 
 const ToDoList = () => {
   const { loading } = useSelector((state) => state.task);
-  const filteredTask = useFiltrationTask();
+  const filteredTask = useSelector(selectFilteredTodos);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -28,7 +29,7 @@ const ToDoList = () => {
     const token = localStorage.getItem("token");
     if (token) loadTasks();
   }, []);
-
+  
   if (loading) return <h1 className="nothing">Загрузка...</h1>;
   if (filteredTask.length === 0)
     return <h2 className="nothing">Задач нет. Добавьте первую!🔥</h2>;

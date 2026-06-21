@@ -1,5 +1,8 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import api from "../api/todoApi";
+import {
+  createAsyncThunk,
+  createSlice,
+} from "@reduxjs/toolkit";
+import api from "../../features/auth/todoApi";
 
 const initialState = {
   taskValue: [],
@@ -82,7 +85,7 @@ export const clearCompetedTodos = createAsyncThunk(
       const deletePromise = completedTask.map((taks) => {
         api.delete(`/todos/${taks.id}`);
       });
-      await Promise.all(deletePromise)
+      await Promise.all(deletePromise);
       return deletePromise.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(
@@ -106,7 +109,7 @@ const handleRejected = (state, action) => {
   state.error = action.payload || "Произошла ошибка";
 };
 
-const taskSlice = createSlice({
+export const taskSlice = createSlice({
   name: "tasks",
   initialState,
   reducers: {
@@ -122,9 +125,27 @@ const taskSlice = createSlice({
     setFilter: (state, action) => {
       state.filter = action.payload;
     },
-    clearError: (state)=>{
+    clearError: (state) => {
       state.error = "";
-    }
+    },
+  },
+  selectors: {
+    selectCurrentFilter: (state) => state.filter,
+    selectTodos: (state) => state.taskValue,
+    selectFilteredTodos: (state) => {
+      const { filter, taskValue } = state;
+      const filteredTask = () => {
+        switch (filter) {
+          case "active":
+            return taskValue.filter((t) => !t.completed);
+          case "completed":
+            return taskValue.filter((t) => t.completed);
+          default:
+            return taskValue;
+        }
+      };
+      return filteredTask();
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -181,4 +202,5 @@ const taskSlice = createSlice({
 });
 
 export default taskSlice.reducer;
-export const { setErrorTask, fetchTasks, setFilter, clearError } = taskSlice.actions;
+export const { setErrorTask, fetchTasks, setFilter, clearError } =
+  taskSlice.actions;
