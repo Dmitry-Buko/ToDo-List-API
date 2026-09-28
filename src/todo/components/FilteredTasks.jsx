@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { clearCompetedTodos, setFilter } from "../store/taskSlice";
-import { selectCurrentFilter, selectTodos } from "../../app/store";
+import { clearCompetedTodos, setFilter } from "../store/taskSlice.ts";
+import { selectCurrentFilter, selectTodos } from "../../app/store.ts";
 import TodoFooter from "../../shared/ui/mui_components/TodoFooter";
 
 

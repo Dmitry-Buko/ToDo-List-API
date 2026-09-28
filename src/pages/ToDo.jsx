@@ -3,11 +3,11 @@ import { clearError } from "../todo/store/taskSlice";
 import FilteredTasks from "../todo/components/FilteredTasks";
 import InputTask from "../todo/components/InputTask";
 import ToDoList from "../todo/components/ToDoList";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const ToDo = () => {
   const dispatch = useDispatch();
-  const { error } = useSelector((state) => state.task);
+  // const { error } = useSelector((state) => state.task);
 
   return (
     <>
@@ -15,7 +15,7 @@ const ToDo = () => {
       <ToDoList />
       <FilteredTasks />
       <ErrorSnackbar
-        errorMessage={error}
+        // errorMessage={error}
         onClose={() => dispatch(clearError())}
       />
     </>

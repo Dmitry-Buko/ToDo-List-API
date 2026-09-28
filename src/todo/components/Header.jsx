@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { logout } from "../store/taskSlice";
+import { logout } from "../store/taskSlice.ts";
 import { useNavigate } from "react-router-dom";
 import ButtonLogout from "../../shared/ui/mui_components/ButtonLogout";
 
@@ -7,7 +7,7 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const handleLogout = () => {
-    dispatch(logout())
+    // dispatch(logout())
     navigate('/login', {replace: true})
   };
   return (

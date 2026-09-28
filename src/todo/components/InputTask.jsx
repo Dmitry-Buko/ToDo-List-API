@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTodos } from "../store/taskSlice";
+import { addTodos } from "../store/taskSlice.ts";
 import { addInputValue, setInputError } from "../store/inputSlice";
 import AddTaskButton from "../../shared/ui/mui_components/AddTaskButton";
 import TaskInput from "../../shared/ui/mui_components/TaskInput";

@@ -7,7 +7,7 @@ import {
   editTodos,
   setErrorTask,
   togglerTodos,
-} from "../store/taskSlice";
+} from "../store/taskSlice.ts";
 import TaskCheckbox from "../../shared/ui/mui_components/Checkbox";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";

@@ -1,42 +1,34 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useGetTodosQuery } from "../../features/todos/taskApi.ts";
+import { selectCurrentFilter } from "../../app/store.ts";
+import { useAppSelector } from "../../app/hooks.ts";
 import Task from "./Task";
-import api from "../../features/auth/todoApi";
-import { fetchTasks, setErrorTask } from "../store/taskSlice";
-import { selectFilteredTodos } from "../../app/store";
-
 
 const ToDoList = () => {
-  const { loading } = useSelector((state) => state.task);
-  const filteredTask = useSelector(selectFilteredTodos);
-  const dispatch = useDispatch();
+  const { data: tasks = [], isLoading, isError } = useGetTodosQuery();
+  const filter = useAppSelector(selectCurrentFilter);
+  let filteredTasks;
 
-  useEffect(() => {
-    const loadTasks = async () => {
-      try {
-        const response = await api.get("/todos");
-        dispatch(fetchTasks(response.data?.data || []));
-      } catch (err) {
-        dispatch(
-          setErrorTask(
-            err.response?.data ||
-              err.message ||
-              "Не удалось загрузить твои задачи!",
-          ),
-        );
-      }
-    };
-    const token = localStorage.getItem("token");
-    if (token) loadTasks();
-  }, []);
-  
-  if (loading) return <h1 className="nothing">Загрузка...</h1>;
-  if (filteredTask.length === 0)
+  switch (filter) {
+    case "active":
+      filteredTasks = tasks.filter((task) => !task.completed);
+      break;
+    case "completed":
+      filteredTasks = tasks.filter((task) => task.completed);
+      break;
+    default:
+      filteredTasks = tasks;
+  }
+
+  if (isLoading) return <h1 className="nothing">Загрузка...</h1>;
+  if (isError) {
+    return <h2 className="nothing">Не удалось загрузить твои задачи!</h2>;
+  }
+  if (tasks.length === 0)
     return <h2 className="nothing">Задач нет. Добавьте первую!🔥</h2>;
 
   return (
     <div className="tasks-list">
-      {filteredTask.map((item) => (
+      {filteredTasks.map((item) => (
         <Task key={item.id} task={item} />
       ))}
     </div>
