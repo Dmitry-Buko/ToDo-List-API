@@ -1,10 +1,20 @@
+import { KeyboardEventHandler } from "react";
+
+interface ITaskEditFormProps {
+  editText: string;
+  setEditText: (value: string) => void;
+  error: string;
+  setError: (message: string) => void;
+  handleKeyDown: KeyboardEventHandler<HTMLInputElement>;
+}
+
 const TaskEditForm = ({
   editText,
   setEditText,
   error,
   setError,
   handleKeyDown,
-}) => {
+}: ITaskEditFormProps) => {
   return (
     <input
       value={editText}

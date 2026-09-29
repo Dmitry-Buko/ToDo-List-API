@@ -2,12 +2,12 @@ import { useCallback, useState } from "react";
 import TaskText from "../../shared/ui/TaskText";
 import TaskEditForm from "../../shared/ui/TaskEditForm";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  deleteTodos,
-  editTodos,
-  setErrorTask,
-  togglerTodos,
-} from "../store/taskSlice.ts";
+// import {
+//   deleteTodos,
+//   editTodos,
+//   setErrorTask,
+//   togglerTodos,
+// } from "../store/taskSlice";
 import TaskCheckbox from "../../shared/ui/mui_components/Checkbox";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -15,8 +15,13 @@ import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { ITodo } from "@/types/types";
 
-const Task = ({ task }) => {
+interface ITaskProps{
+  task: ITodo;
+}
+
+const Task = ({ task }: ITaskProps) => {
   const [isEdit, setIsEdit] = useState(false);
   const [editText, setEditText] = useState(task.title || "");
 

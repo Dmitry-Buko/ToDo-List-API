@@ -4,16 +4,28 @@ import Button from "@mui/material/Button";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
+import type { Filter } from "@/types/types";
+import { MouseEvent } from "react";
+
+interface TodoFooterProps {
+  filter: Filter;
+  activeCount: number;
+  onFilterChange: (filter: Filter) => void;
+  onClearCompleted: () => void;
+}
 
 export default function TodoFooter({
   filter,
   activeCount,
-  dispatch,
-  setFilter,
-  clearCompetedTodos,
-}) {
-  const handleFilterChange = (event, newFilter) => {
-    if (newFilter !== null) dispatch(setFilter(newFilter));
+  onFilterChange,
+  onClearCompleted,
+}: TodoFooterProps) {
+
+  const handleFilterChange = (
+    _: MouseEvent<HTMLElement>,
+    newFilter: Filter | null,
+  ) => {
+    if (newFilter !== null) onFilterChange(newFilter);
   };
 
   return (
@@ -27,7 +39,6 @@ export default function TodoFooter({
         gap: "16px",
       }}
     >
-      {/* Кнопки фильтрации */}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <ToggleButtonGroup
           value={filter}
@@ -82,7 +93,6 @@ export default function TodoFooter({
         </ToggleButtonGroup>
       </Box>
 
-      {/* Счетчик и Очистка */}
       <Box
         sx={{
           display: "flex",
@@ -98,7 +108,7 @@ export default function TodoFooter({
           variant="text"
           size="small"
           startIcon={<DeleteSweepIcon />}
-          onClick={() => dispatch(clearCompetedTodos())}
+          onClick={onClearCompleted}
           sx={{
             color: "#e53e3e",
             textTransform: "none",

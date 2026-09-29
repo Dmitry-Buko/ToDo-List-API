@@ -1,4 +1,3 @@
-import { RootState } from "@/app/store";
 import { CreateTodoDto, ITodo } from "@/types/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -71,4 +70,5 @@ export const {
   useDeleteTodoMutation,
   useEditTodoMutation,
   useTogglerTodoMutation,
+  useClearCompletedMutation,
 } = taskApi;

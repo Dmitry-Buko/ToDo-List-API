@@ -1,6 +1,15 @@
 import Checkbox from "@mui/material/Checkbox";
+import { ChangeEventHandler } from "react";
 
-export default function TaskCheckbox({ checked, onChange }) {
+interface ITaskCheckboxProps {
+  checked: boolean;
+  onChange: ChangeEventHandler<HTMLInputElement>;
+}
+
+export default function TaskCheckbox({
+  checked,
+  onChange,
+}: ITaskCheckboxProps) {
   return (
     <Checkbox
       checked={checked}

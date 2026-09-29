@@ -1,7 +1,11 @@
 import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-export default function ButtonLogout({ onClick }) {
+interface IButtonLogoutProps {
+  onClick: () => void;
+}
+
+export default function ButtonLogout({ onClick }: IButtonLogoutProps) {
   return (
     <Button
       variant="text"
