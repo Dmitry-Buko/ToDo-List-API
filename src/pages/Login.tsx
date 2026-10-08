@@ -1,59 +1,44 @@
-import axios from "axios";
 import { useState } from "react";
+import type { ChangeEvent, SubmitEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import InputLogin from "../shared/ui/InputLogin";
+import InputLogin from "@/shared/ui/InputLogin";
+import { useAppDispatch, useAppSelector } from "@/app/hooks";
+import {
+  login,
+  selectAuthError,
+  selectAuthStatus,
+} from "@/features/auth/authSlice";
+
+interface LocationState {
+  email?: string;
+  password?: string;
+}
 
 const Login = () => {
   const location = useLocation();
+  const state = location.state as LocationState | null;
   const [formData, setFormData] = useState({
-    email: location.state?.email || "",
-    password: location.state?.password || "",
+    email: state?.email ?? "",
+    password: state?.password ?? "",
   });
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const status = useAppSelector(selectAuthStatus);
+  const error = useAppSelector(selectAuthError);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
     setSuccess("");
-
-    const url = "https://todo-redev.onrender.com/api/auth/login";
-    const config = {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    };
-    try {
-      const response = await axios.post(url, formData, config);
-      const token = response.data.access_token;
-      localStorage.setItem("token", token);
-      if (token) {
-        setSuccess("Вход успешно выполнен!");
-        setFormData({
-          email: "",
-          password: "",
-        });
-        setTimeout(() => {
-          navigate("/todo");
-        }, 1500);
-      } else {
-        setError("Токен не получен!");
-      }
-    } catch (error) {
-      const errorMessage =
-        error?.response?.data?.errors?.[0]?.msg ||
-        error?.response?.data?.message;
-      if (errorMessage) setError(errorMessage);
-    } finally {
-      setLoading(false);
+    const result = await dispatch(login(formData));
+    if (login.fulfilled.match(result)) {
+      setSuccess("Вход успешно выполнен!");
+      setFormData({ email: "", password: "" });
+      setTimeout(() => navigate("/todo"), 1500);
     }
   };
 
@@ -74,7 +59,6 @@ const Login = () => {
               value={formData.email}
               onChange={handleChange}
               placeholder="Введите e-mail"
-              required
             />
           </div>
 
@@ -86,16 +70,15 @@ const Login = () => {
               value={formData.password}
               onChange={handleChange}
               placeholder="Введите пароль"
-              required
             />
           </div>
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={status === "loading"}
             className="form-group__btn-enter"
           >
-            {loading ? "Вход..." : "Войти"}
+            {status === "loading" ? "Вход..." : "Войти"}
           </button>
         </form>
 

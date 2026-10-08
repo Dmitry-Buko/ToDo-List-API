@@ -1,55 +1,59 @@
 import { useCallback, useState } from "react";
-import TaskText from "../../shared/ui/TaskText";
-import TaskEditForm from "../../shared/ui/TaskEditForm";
-import { useDispatch, useSelector } from "react-redux";
-// import {
-//   deleteTodos,
-//   editTodos,
-//   setErrorTask,
-//   togglerTodos,
-// } from "../store/taskSlice";
-import TaskCheckbox from "../../shared/ui/mui_components/Checkbox";
+import TaskText from "@/shared/ui/TaskText";
+import TaskEditForm from "@/shared/ui/TaskEditForm";
+import TaskCheckbox from "@/shared/ui/mui_components/Checkbox";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { ITodo } from "@/types/types";
+import {
+  useDeleteTodoMutation,
+  useEditTodoMutation,
+  useTogglerTodoMutation,
+} from "@/features/todos/taskApi";
+import { getErrorMessage } from "@/shared/lib/getError";
+import type { ITodo } from "@/types/types";
 
-interface ITaskProps{
+interface TaskProps {
   task: ITodo;
 }
 
-const Task = ({ task }: ITaskProps) => {
+const Task = ({ task }: TaskProps) => {
   const [isEdit, setIsEdit] = useState(false);
-  const [editText, setEditText] = useState(task.title || "");
+  const [editText, setEditText] = useState(task.title);
+  const [error, setError] = useState("");
 
-  const { loading, error } = useSelector((state) => state.task);
-  const dispatch = useDispatch();
+  const [editTodo, { isLoading: isEditing }] = useEditTodoMutation();
+  const [deleteTodo, { isLoading: isDeleting }] = useDeleteTodoMutation();
+  const [togglerTodo] = useTogglerTodoMutation();
 
   const validateAndSave = useCallback(
-    async (text) => {
+    async (text: string) => {
       if (!text.trim()) {
-        dispatch(setErrorTask("Задача не может быть пустой!"));
+        setError("Задача не может быть пустой!");
         return;
       }
-      await dispatch(editTodos({ id: task.id, newTitle: text }));
-      dispatch(setErrorTask(""));
+      const result = await editTodo({ id: task.id, newTitle: text });
+      if ("error" in result) {
+        setError(getErrorMessage(result.error) ?? "Не удалось сохранить");
+        return;
+      }
+      setError("");
       setIsEdit(false);
       setEditText(text);
-      return false;
     },
-    [dispatch, task.id],
+    [editTodo, task.id],
   );
 
-  const handleKeyDown = async (e) => {
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       await validateAndSave(editText);
     } else if (e.key === "Escape") {
       setIsEdit(false);
       setEditText(task.title);
-      dispatch(setErrorTask(""));
+      setError("");
     }
   };
 
@@ -58,7 +62,14 @@ const Task = ({ task }: ITaskProps) => {
       await validateAndSave(editText);
     } else {
       setIsEdit(true);
-      dispatch(setErrorTask(""));
+      setError("");
+    }
+  };
+
+  const handleDelete = async () => {
+    const result = await deleteTodo(task.id);
+    if ("error" in result) {
+      setError(getErrorMessage(result.error) ?? "Не удалось удалить задачу");
     }
   };
 
@@ -77,26 +88,22 @@ const Task = ({ task }: ITaskProps) => {
         maxWidth: "550px",
         margin: "8px auto",
         transition: "all 0.2s ease",
-        "&:hover": {
-          borderColor: "#dcdfe4",
-        },
+        "&:hover": { borderColor: "#dcdfe4" },
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: "16px", flex: 1 }}>
         <TaskCheckbox
-          checked={!!task.completed}
-          onChange={() => dispatch(togglerTodos(task.id))}
+          checked={task.completed}
+          onChange={() => togglerTodo(task.id)}
         />
         <Box sx={{ flex: 1 }}>
           {isEdit ? (
-            <Box
-              sx={{ display: "flex", flexDirection: "column", width: "100%" }}
-            >
+            <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
               <TaskEditForm
                 editText={editText}
                 setEditText={setEditText}
                 error={error}
-                setError={(error) => dispatch(setErrorTask(error))}
+                setError={setError}
                 handleKeyDown={handleKeyDown}
               />
             </Box>
@@ -108,8 +115,8 @@ const Task = ({ task }: ITaskProps) => {
       <Box sx={{ display: "flex", gap: "8px", marginLeft: "16px" }}>
         <Button
           onClick={toggleEdit}
-          loading={!isEdit && loading}
-          disabled={isEdit && loading}
+          loading={!isEdit && isEditing}
+          disabled={isEdit && isEditing}
           variant="text"
           size="small"
           startIcon={isEdit ? <CheckCircleIcon /> : <EditIcon />}
@@ -119,19 +126,13 @@ const Task = ({ task }: ITaskProps) => {
             borderRadius: "8px",
             backgroundColor: isEdit ? "#edf7ed" : "#f7fafc",
             fontWeight: 500,
-            "&:hover": {
-              backgroundColor: isEdit ? "#e8f5e9" : "#edf2f7",
-            },
-            "&.Mui-disabled": {
-              backgroundColor: "#f7fafc",
-            },
+            "&:hover": { backgroundColor: isEdit ? "#e8f5e9" : "#edf2f7" },
+            "&.Mui-disabled": { backgroundColor: "#f7fafc" },
           }}
-        >
-        </Button>
-
+        />
         <Button
-          onClick={() => dispatch(deleteTodos(task.id))}
-          loading={loading}
+          onClick={handleDelete}
+          loading={isDeleting}
           variant="text"
           size="small"
           startIcon={<DeleteIcon />}
@@ -141,15 +142,10 @@ const Task = ({ task }: ITaskProps) => {
             borderRadius: "8px",
             backgroundColor: "#fff5f5",
             fontWeight: 500,
-            "&:hover": {
-              backgroundColor: "#fed7d7",
-            },
-            "&.Mui-disabled": {
-              backgroundColor: "#fff5f5",
-            },
+            "&:hover": { backgroundColor: "#fed7d7" },
+            "&.Mui-disabled": { backgroundColor: "#fff5f5" },
           }}
-        >
-        </Button>
+        />
       </Box>
     </Paper>
   );

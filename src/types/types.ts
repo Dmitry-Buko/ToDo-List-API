@@ -1,3 +1,20 @@
+export interface LoginDto {
+  email: string;
+  password: string;
+}
+
+export interface RegisterDto {
+  username: string;
+  email: string;
+  password: string;
+  gender: string;
+  age: number;
+}
+
+export interface AuthResponse {
+  access_token: string;
+}
+
 export interface ITodo {
   completed: boolean;
   createdAt: string;
@@ -6,6 +23,16 @@ export interface ITodo {
   title: string;
   updatedAt: string;
   userId: number;
+}
+
+export interface PaginatedTodos {
+  data: ITodo[];
+  meta: {
+    limit: number;
+    page: number;
+    total: number;
+    totalPages: number;
+  };
 }
 
 export interface CreateTodoDto {

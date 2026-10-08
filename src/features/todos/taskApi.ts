@@ -1,4 +1,4 @@
-import { CreateTodoDto, ITodo } from "@/types/types";
+import { CreateTodoDto, ITodo, PaginatedTodos } from "@/types/types";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const taskApi = createApi({
@@ -19,6 +19,7 @@ export const taskApi = createApi({
   endpoints: (builder) => ({
     getTodos: builder.query<ITodo[], void>({
       query: () => "/todos",
+      transformResponse: (response: PaginatedTodos)=>response.data,
       providesTags: ["Todo"],
     }),
     addTodo: builder.mutation<ITodo, CreateTodoDto>({

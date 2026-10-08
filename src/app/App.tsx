@@ -1,10 +1,11 @@
-import Header from "../todo/components/Header";
-import { Routes, Route, Navigate } from "react-router-dom";
-import Login from "../pages/Login";
-const Register = lazy(() => import("../pages/Register"));
-import PrivateRoute from "../features/auth/components/PrivateRoute";
-import ToDo from "../pages/ToDo";
 import { lazy, Suspense } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Header from "@/todo/components/Header";
+import Login from "@/pages/Login";
+import PrivateRoute from "@/features/auth/components/PrivateRoute";
+import ToDo from "@/pages/ToDo";
+
+const Register = lazy(() => import("@/pages/Register"));
 
 function App() {
   return (
