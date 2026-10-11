@@ -2,13 +2,14 @@ import { useNavigate } from "react-router-dom";
 import ButtonLogout from "@/shared/ui/mui_components/ButtonLogout";
 import { useAppDispatch } from "@/app/hooks";
 import { taskApi } from "@/features/todos/taskApi";
+import { logout } from "@/features/auth/authSlice";
 
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    dispatch(logout())
     dispatch(taskApi.util.resetApiState());
     navigate("/login", { replace: true });
   };

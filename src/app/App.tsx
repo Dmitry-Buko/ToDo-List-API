@@ -3,8 +3,8 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "@/todo/components/Header";
 import Login from "@/pages/Login";
 import PrivateRoute from "@/features/auth/components/PrivateRoute";
-import ToDo from "@/pages/ToDo";
 
+const ToDo = lazy(() => import("@/pages/ToDo"));
 const Register = lazy(() => import("@/pages/Register"));
 
 function App() {

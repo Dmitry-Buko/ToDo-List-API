@@ -7,7 +7,7 @@ ToDo-приложение с авторизацией и хранением за
 
 ## Стек
 
-- React 18 + TypeScript
+- React 19 + TypeScript
 - Vite
 - Redux Toolkit (slices, `createAsyncThunk`)
 - RTK Query (кэш и мутации для задач)
